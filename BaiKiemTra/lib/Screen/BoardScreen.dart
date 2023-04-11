@@ -1,9 +1,10 @@
 import 'package:baikiemtra/Screen/AddTask.dart';
 import 'package:flutter/material.dart';
 
-import '../Compoment/TaskGui.dart';
+import '../Compoment/ListData.dart';
+import '../Compoment/TaskInfo.dart';
 
-List<TaskGui> listTask=[];
+
 class BoardScreen extends StatefulWidget {
   static String id='Board_Screen';
   const BoardScreen({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class BoardScreen extends StatefulWidget {
   @override
   State<BoardScreen> createState() => _BoardScreenState();
 }
-
 class _BoardScreenState extends State<BoardScreen> {
   @override
   Widget build(BuildContext context) {
@@ -51,19 +51,21 @@ class _BoardScreenState extends State<BoardScreen> {
           children: [
             TabBarView(
               children: <Widget>[
-                Center(
-                 child: (listTask.length==0?ScreenNoTask():ScreenHasTask()),
-                ),
-                Center(
+                Container(
 
-                 child: (listTask.length==0?ScreenNoTask():ScreenHasTask()),
-                ),
-                Center(
+                   child: (listTask.length==0?ScreenNoTask():ScreenHasTask(listTask)),
 
-                  child: (listTask.length==0?ScreenNoTask():ScreenHasTask()),
                 ),
-                Center(
-                  child: (listTask.length==0?ScreenNoTask():ScreenHasTask()),
+                Container(
+
+                 child: (listTaskUnCompleted.length==0?ScreenNoTask():ScreenHasTask(listTaskUnCompleted)),
+                ),
+                Container(
+
+                  child: (listTaskCompleted.length==0?ScreenNoTask():ScreenHasTask(listTaskCompleted)),
+                ),
+                Container(
+                  child: (listTaskFavourited.length==0?ScreenNoTask():ScreenHasTask(listTaskFavourited)),
                 )
               ],
             ),
@@ -104,10 +106,78 @@ class _BoardScreenState extends State<BoardScreen> {
       ),
     );
   }
-  ScreenHasTask(){
+  ScreenHasTask(List<TaskInfo> list){
     return ListView.builder(
+      itemCount: list.length,
+      shrinkWrap: true,
         itemBuilder: (BuildContext context, index){
-      return listTask[index];
+      return Container(
+        margin: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            color: Colors.red, borderRadius: BorderRadius.circular(10)),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [TaskGui(list[index])]
+        ),
+      );
+
     });
+  }
+  TaskGui(TaskInfo taskInfo){
+    IconData iconFavorite=Icons.favorite_border;
+    return Container(
+      margin: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+          color: Colors.red, borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        leading: Checkbox(
+          value: taskInfo.checkCompleted,
+          onChanged: (bool? value) {
+            taskInfo.checkCompleted=value!;
+            if(taskInfo.checkCompleted)
+              {
+                  listTaskCompleted.add(taskInfo);
+                  listTaskUnCompleted.remove(taskInfo);
+              }
+            else{
+              listTaskUnCompleted.add(taskInfo);
+              listTaskCompleted.remove(taskInfo);
+            }
+            setState(() {});
+          },
+
+        ),
+            title: Text(
+              taskInfo.title,
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            subtitle:Column(
+              children: [
+                Text('From: ${taskInfo.fromTime} To: ${taskInfo.endTime}'),
+                Text('Dealine: ${taskInfo.dealine}')
+              ],
+            ),
+        trailing: IconButton(
+          onPressed: () {
+            if(!taskInfo.checkFavourited)
+              {
+                iconFavorite=Icons.favorite;
+                taskInfo.checkFavourited=true;
+                listTaskFavourited.add(taskInfo);
+              }
+            else{
+              iconFavorite=Icons.favorite_border;
+              taskInfo.checkFavourited=false;
+              listTaskFavourited.remove(taskInfo);
+            }
+            setState(() {});
+          },
+          icon: Icon(iconFavorite,color: (taskInfo.checkFavourited?Colors.pink:Colors.black),),
+        ),
+      ),
+    );
   }
 }
