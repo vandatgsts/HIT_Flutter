@@ -2,7 +2,6 @@ import 'package:baikiemtra/Compoment/ListData.dart';
 import 'package:baikiemtra/Compoment/TaskInfo.dart';
 import 'package:baikiemtra/Screen/BoardScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 
 class AddTask extends StatefulWidget {
   static String id = 'Add_Task';
@@ -210,10 +209,10 @@ class _AddTaskState extends State<AddTask> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ColorTask(),
-                    ColorTask(color: listColor[1],id: 1),
-                    ColorTask(color: listColor[2],id: 2),
-                    ColorTask(color: listColor[3],id: 3),
-                    ColorTask(color: listColor[4],id: 4),
+                    ColorTask(color: listColor[1], id: 1),
+                    ColorTask(color: listColor[2], id: 2),
+                    ColorTask(color: listColor[3], id: 3),
+                    ColorTask(color: listColor[4], id: 4),
                   ],
                 )),
             Container(
@@ -244,36 +243,36 @@ class _AddTaskState extends State<AddTask> {
       ),
     );
   }
-  ColorTask({Color color=Colors.red,int id=0}){
+
+  ColorTask({Color color = Colors.red, int id = 0}) {
     return Container(
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: color,
-         border: Border.all(color: (!listCheckColor[id]?color:Colors.black))
-      ),
+          borderRadius: BorderRadius.circular(10),
+          color: color,
+          border:
+              Border.all(color: (!listCheckColor[id] ? color : Colors.black))),
       child: Checkbox(
         value: listCheckColor[id],
         onChanged: (bool? value) {
           setState(() {
             listCheckColor[id] = value!;
-            if(listCheckColor[id])
-              {
-                for(int i=0; i<listCheckColor.length;i++ )
-                  {
-                    if(i!=id) listCheckColor[i]=false;
-                    else newTask.color=color;
-                    print(newTask.color);
-                  }
+            if (listCheckColor[id]) {
+              for (int i = 0; i < listCheckColor.length; i++) {
+                if (i != id)
+                  listCheckColor[i] = false;
+                else
+                  newTask.color = color;
+                print(newTask.color);
               }
-
+            }
           });
         },
       ),
     );
-
   }
+
   void _showToast(BuildContext context) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(

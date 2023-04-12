@@ -135,10 +135,9 @@ class _BoardScreenState extends State<BoardScreen> {
         itemCount: list.length,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, index) {
-          return  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [TaskGui(list[index])]
-          );
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [TaskGui(list[index])]);
         });
   }
 
@@ -185,7 +184,7 @@ class _BoardScreenState extends State<BoardScreen> {
             setState(() {});
           },
           icon: Icon(
-            taskInfo.checkFavourited?Icons.favorite:Icons.favorite_border,
+            taskInfo.checkFavourited ? Icons.favorite : Icons.favorite_border,
             color: (taskInfo.checkFavourited ? Colors.pink : Colors.black),
           ),
         ),

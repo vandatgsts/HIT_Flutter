@@ -12,13 +12,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: BoardScreen.id,
-      routes: {
-        BoardScreen.id: (context)=>BoardScreen(),
-        AddTask.id:(context)=>AddTask(),
-      }
-
-    );
+    return MaterialApp(initialRoute: BoardScreen.id, routes: {
+      BoardScreen.id: (context) => BoardScreen(),
+      AddTask.id: (context) => AddTask(),
+    });
   }
 }
