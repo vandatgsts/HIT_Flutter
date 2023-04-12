@@ -14,12 +14,11 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  DateTime date = DateTime.utc(2022, 12, 23);
+  DateTime date = DateTime.now();
   TimeOfDay timeOfDayFrom = TimeOfDay(hour: 11, minute: 00);
   TimeOfDay timeOfDayEnd = TimeOfDay(hour: 11, minute: 00);
   TaskInfo newTask = TaskInfo();
-  bool chooseColor = true;
-  TextEditingController checkCotroler=TextEditingController();
+  TextEditingController checkCotroler = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +114,8 @@ class _AddTaskState extends State<AddTask> {
                                 if (picked != null && picked != timeOfDayFrom)
                                   setState(() {
                                     timeOfDayFrom = picked;
-                                    newTask.fromTime= '${timeOfDayFrom.hour}:${timeOfDayFrom.minute} ';
+                                    newTask.fromTime =
+                                        '${timeOfDayFrom.hour}:${timeOfDayFrom.minute} ';
                                   });
                               },
                               icon: const Icon(
@@ -139,41 +139,43 @@ class _AddTaskState extends State<AddTask> {
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                     ),
-                  // chon gio end
-                  Stack(
-                    alignment: Alignment.centerRight,
-                    children: [
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black26),
-                            borderRadius: BorderRadius.circular(2)),
-                        child: Text(
-                          '${timeOfDayEnd.hour}:${timeOfDayEnd.minute }',
-                          style: TextStyle(
-                              color: Colors.black45, fontSize: 15),
+                    // chon gio end
+                    Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black26),
+                              borderRadius: BorderRadius.circular(2)),
+                          child: Text(
+                            '${timeOfDayEnd.hour}:${timeOfDayEnd.minute}',
+                            style:
+                                TextStyle(color: Colors.black45, fontSize: 15),
+                          ),
                         ),
-                      ),
-                      IconButton(
-                          onPressed: () async {
-                            final TimeOfDay? picked = await showTimePicker(
-                              context: context,
-                              initialTime: timeOfDayEnd,
-                            );
-                            if (picked != null && picked != timeOfDayEnd)
-                              setState(() {
-                                timeOfDayEnd = picked;
-                                newTask.endTime=  '${timeOfDayEnd.hour}:${timeOfDayEnd.minute }';
-                              });
-                          },
-                          icon: const Icon(
-                            Icons.timer,
-                            size: 20,
-                          ))
-                    ],
-                  ),
+                        IconButton(
+                            onPressed: () async {
+                              final TimeOfDay? picked = await showTimePicker(
+                                context: context,
+                                initialTime: timeOfDayEnd,
+                              );
+                              if (picked != null && picked != timeOfDayEnd) {
+                                setState(() {
+                                  timeOfDayEnd = picked;
+                                  newTask.endTime =
+                                      '${timeOfDayEnd.hour}:${timeOfDayEnd.minute}';
+                                });
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.timer,
+                              size: 20,
+                            ))
+                      ],
+                    ),
                   ],
                 ))
               ],
@@ -207,28 +209,11 @@ class _AddTaskState extends State<AddTask> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    //ColorTask(Colors.red, !chooseColor),
-                    // ColorTask(Colors.yellow,chooseColor),
-                    // ColorTask(Colors.cyan,!chooseColor),
-                    // ColorTask(Colors.purple,!chooseColor),
-                    // ColorTask(Colors.green,!chooseColor),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.red,
-                        //  border: Border.all(color: colorBoder)
-                      ),
-                      child: Checkbox(
-                        value: chooseColor,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            chooseColor = value!;
-                          });
-                        },
-                      ),
-                    ),
+                    ColorTask(),
+                    ColorTask(color: listColor[1],id: 1),
+                    ColorTask(color: listColor[2],id: 2),
+                    ColorTask(color: listColor[3],id: 3),
+                    ColorTask(color: listColor[4],id: 4),
                   ],
                 )),
             Container(
@@ -259,7 +244,36 @@ class _AddTaskState extends State<AddTask> {
       ),
     );
   }
+  ColorTask({Color color=Colors.red,int id=0}){
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: color,
+         border: Border.all(color: (!listCheckColor[id]?color:Colors.black))
+      ),
+      child: Checkbox(
+        value: listCheckColor[id],
+        onChanged: (bool? value) {
+          setState(() {
+            listCheckColor[id] = value!;
+            if(listCheckColor[id])
+              {
+                for(int i=0; i<listCheckColor.length;i++ )
+                  {
+                    if(i!=id) listCheckColor[i]=false;
+                    else newTask.color=color;
+                    print(newTask.color);
+                  }
+              }
 
+          });
+        },
+      ),
+    );
+
+  }
   void _showToast(BuildContext context) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
@@ -284,5 +298,4 @@ class _AddTaskState extends State<AddTask> {
         newTask.dealine = '${date.day}/${date.month}/${date.year}';
       });
   }
-
 }

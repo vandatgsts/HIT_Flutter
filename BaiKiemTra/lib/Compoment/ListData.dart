@@ -9,3 +9,4 @@ List<TaskInfo> listTask=[];
 List<TaskInfo> listTaskFavourited=[];
 List<TaskInfo> listTaskUnCompleted=[];
 List<TaskInfo> listTaskCompleted=[];
+List<bool> listCheckColor=List.generate(listColor.length, (index) => false);

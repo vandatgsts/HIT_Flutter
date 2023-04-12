@@ -7,5 +7,5 @@ class TaskInfo {
   String dealine = '23/11/2022';
   bool checkFavourited = false;
   bool checkCompleted = false;
-  Color color = Colors.red;
+  late Color color = Colors.red;
 }
