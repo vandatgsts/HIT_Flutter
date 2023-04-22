@@ -14,8 +14,8 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   DateTime date = DateTime.now();
-  TimeOfDay timeOfDayFrom = TimeOfDay(hour: 11, minute: 00);
-  TimeOfDay timeOfDayEnd = TimeOfDay(hour: 11, minute: 00);
+  TimeOfDay timeOfDayFrom = const TimeOfDay(hour: 11, minute: 00);
+  TimeOfDay timeOfDayEnd = const TimeOfDay(hour: 11, minute: 00);
   TaskInfo newTask = TaskInfo();
   TextEditingController checkCotroler = TextEditingController();
 
@@ -70,7 +70,7 @@ class _AddTaskState extends State<AddTask> {
                 ),
                 IconButton(
                     onPressed: () => _selectDate(context),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.calendar_today,
                       size: 20,
                     ))
@@ -94,28 +94,21 @@ class _AddTaskState extends State<AddTask> {
                           Container(
                             height: 50,
                             width: double.infinity,
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(2)),
                             child: Text(
                               '${timeOfDayFrom.hour}:${timeOfDayFrom.minute} ',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black45, fontSize: 15),
                             ),
                           ),
                           IconButton(
                               onPressed: () async {
-                                final TimeOfDay? picked = await showTimePicker(
-                                  context: context,
-                                  initialTime: timeOfDayFrom,
-                                );
-                                if (picked != null && picked != timeOfDayFrom)
-                                  setState(() {
-                                    timeOfDayFrom = picked;
-                                    newTask.fromTime =
-                                        '${timeOfDayFrom.hour}:${timeOfDayFrom.minute} ';
-                                  });
+                                await _getTime(context, (time){timeOfDayFrom = time;});
+                                newTask.fromTime =
+                                '${timeOfDayFrom.hour}:${timeOfDayFrom.minute} ';
                               },
                               icon: const Icon(
                                 Icons.timer,
@@ -145,29 +138,21 @@ class _AddTaskState extends State<AddTask> {
                         Container(
                           height: 50,
                           width: double.infinity,
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.black26),
                               borderRadius: BorderRadius.circular(2)),
                           child: Text(
                             '${timeOfDayEnd.hour}:${timeOfDayEnd.minute}',
                             style:
-                                TextStyle(color: Colors.black45, fontSize: 15),
+                                const TextStyle(color: Colors.black45, fontSize: 15),
                           ),
                         ),
                         IconButton(
                             onPressed: () async {
-                              final TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: timeOfDayEnd,
-                              );
-                              if (picked != null && picked != timeOfDayEnd) {
-                                setState(() {
-                                  timeOfDayEnd = picked;
-                                  newTask.endTime =
-                                      '${timeOfDayEnd.hour}:${timeOfDayEnd.minute}';
-                                });
-                              }
+                              await _getTime(context, (time){timeOfDayEnd = time;});
+                              newTask.endTime =
+                              '${timeOfDayEnd.hour}:${timeOfDayEnd.minute} ';
                             },
                             icon: const Icon(
                               Icons.timer,
@@ -242,6 +227,19 @@ class _AddTaskState extends State<AddTask> {
         ),
       ),
     );
+  }
+
+  Future<void> _getTime(BuildContext context, Function(TimeOfDay) myTime) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: timeOfDayFrom,
+    );
+    if (picked != null && picked != timeOfDayFrom) {
+      setState(() {
+        //timeOfDayFrom = picked;
+        myTime(picked);
+      });
+    }
   }
 
   ColorTask({Color color = Colors.red, int id = 0}) {
